@@ -33,6 +33,7 @@ $medium = stripslashes($pre_medium);
 $term = stripslashes($pre_term);
 $content = stripslashes($pre_content);
 $name = stripslashes($pre_name);
+$select_page = $_POST['select-page'];
 	?>
 <style>
 code {
@@ -93,6 +94,37 @@ code {
 	        			(product, promo code or slogan)
 	        		</td>
 	        	</tr>
+	        	<tr valign="top">
+	        		<th scope="row">
+	        			<label>Choose your page:</label>
+	        		</th>
+	        		<td>
+	<?php  
+    //The service images
+	//Get all the attachments that are service backgrounds
+    $the_pages = get_posts( array( 
+    	'post_type' => 'page',
+    	'post_status' => 'publish',
+    	'posts_per_page' => -1
+     ) );
+            if ( $the_pages ) { ?>
+            	<select name="select-page">
+            		<option value="">NO PAGE</option>
+            		<option value="<?php echo $site; ?>/">HOME</option>
+            <?php
+            foreach ( $the_pages as $page ) {
+            $page_id = $page->ID;
+            $slug = get_permalink($page_id);
+            $title = $page->post_title;
+            ?>
+		<option value="<?php echo $slug; ?>"><?php echo $title; ?></option>
+        <?php
+            }
+            echo "</select>";
+        }
+        ?>
+        	</td>
+        </tr>
         	</tbody>
     	</table>
 
@@ -104,7 +136,8 @@ code {
 <?php
 //output new url string
 if (!empty($source)) {
-echo "<code>$site/?";
+echo "<code>";
+echo "$select_page?";
 echo "utm_source=$source";
 echo "&utm_medium=$medium";
 if (!empty($term)) { echo "&utm_term=$term"; }
@@ -114,16 +147,17 @@ echo "&utm_campaign=$name</code>";
 
 //Let's add some notes and info
 ?>
-<p>
-	For more information visit <a href="https://support.google.com/analytics/answer/1033867?hl=en">Google's URL builder page</a>.
-</p>
+
 <div class="updated">
 	<h3>Notes</h3>
 	<ul>
-		<li>None of this works without Source, Medium and Name</li>
+		<li>None of this works right in <a href="http://google.com/analytics">Google Analytics</a> without Source, Medium and Name</li>
 		<li>You can view the results of your campaign by going to Reporting- >Acquisition- >Campaigns in <a href="http://google.com/analytics">Google Analytics</a></li>
 	</ul>
 </div>
+<p>
+	For more information visit <a href="https://support.google.com/analytics/answer/1033867?hl=en">Google's URL builder page</a>.
+</p>
 </div>
 <?php }
 ?>

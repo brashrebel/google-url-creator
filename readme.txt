@@ -1,4 +1,4 @@
-=== Media Selector ===
+=== Google URL Creator ===
 
 Contributors: BrashRebel
 
