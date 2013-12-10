@@ -99,12 +99,12 @@ code {
 	        			<label>Choose your page:</label>
 	        		</th>
 	        		<td>
-	<?php  
-    //The service images
-	//Get all the attachments that are service backgrounds
+	<?php
     $the_pages = get_posts( array( 
-    	'post_type' => 'page',
+    	'post_type' => 'any',
     	'post_status' => 'publish',
+    	'orderby' => 'title',
+    	'order' => 'ASC',
     	'posts_per_page' => -1
      ) );
             if ( $the_pages ) { ?>
@@ -145,7 +145,6 @@ if (!empty($content)) { echo "&utm_content=$content"; }
 echo "&utm_campaign=$name</code>";
 }
 
-//Let's add some notes and info
 ?>
 
 <div class="updated">
@@ -153,6 +152,7 @@ echo "&utm_campaign=$name</code>";
 	<ul>
 		<li>None of this works right in <a href="http://google.com/analytics">Google Analytics</a> without Source, Medium and Name</li>
 		<li>You can view the results of your campaign by going to Reporting- >Acquisition- >Campaigns in <a href="http://google.com/analytics">Google Analytics</a></li>
+		<li>If you wish to build a URL for something other than what is available in the dropdown, simply select NO PAGE in the dropdown and append the results to the URL of your other content type</li>
 	</ul>
 </div>
 <p>
