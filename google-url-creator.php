@@ -2,7 +2,7 @@
 /*
 Plugin Name: Google URL Creator
 Description: Generate custom URL strings that can be used to track campaigns in Google Analytics.
-Version: 1.1
+Version: 1.2
 Author: Kyle Maurer
 Author URI: http://realbigmarketing.com/staff/kyle
 */
@@ -51,11 +51,12 @@ class GoogleURLCreator {
 	 *
 	 * @since 1.1
 	 */
-	function __construct() {
+	public function __construct() {
 		$this->get_terms();
 		$this->generate_url();
 
-		add_action( "admin_menu", array( $this, 'create_submenu_page' ) );
+		add_action( 'admin_menu', array( $this, 'create_submenu_page' ) );
+		add_action( 'admin_print_footer_scripts', array( $this, 'button' ) );
 	}
 
 	/**
@@ -130,7 +131,7 @@ class GoogleURLCreator {
 	 * @since 1.1
 	 */
 	private function error_check() {
-		if( empty( $this->terms['source'] ) || empty( $this->terms['medium'] ) || empty( $this->terms['name'] ) ){
+		if ( empty( $this->terms['source'] ) || empty( $this->terms['medium'] ) || empty( $this->terms['name'] ) ) {
 			echo '<div class="message error">';
 			echo '<p><strong>ERROR:</strong> Please supply the following:</p>';
 			echo '<ul>';
@@ -150,9 +151,11 @@ class GoogleURLCreator {
 	 * @since 1.1
 	 */
 	private function output_url() {
-		if ( $this->error ) return;
+		if ( $this->error ) {
+			return;
+		}
 
-		echo '<code style="font-size: 2em;line-height: 1.5em;">' . $this->generated_url. '</code>';
+		echo '<code style="font-size: 2em;line-height: 1.5em;">' . $this->generated_url . '</code>';
 	}
 
 	/**
@@ -169,93 +172,103 @@ class GoogleURLCreator {
 			<form method="post">
 				<table class="form-table">
 					<tbody>
-						<tr valign="top">
-							<th scope="row">
-								<label for="source">Campaign Source <?php echo $this->required; ?></label>
-							</th>
-							<td>
-								<input type="text" name="source" id="source" value="<?php if ( ! empty( $this->terms['source'] ) ) {
-									echo $this->terms['source'];
-								} ?>" class="txt requiredField"/>
-								<p class="description">(referrer: google, citysearch, newsletter4)</p>
-							</td>
-						</tr>
-						<tr valign="top">
-							<th scope="row">
-								<label for="source">Campaign Medium <?php echo $this->required; ?></label>
-							</th>
-							<td>
-								<input type="text" name="medium" id="medium" value="<?php if ( ! empty( $this->terms['medium'] ) ) {
-									echo $this->terms['medium'];
-								} ?>" class="txt requiredField"/>
-								<p class="description">(marketing medium: cpc, banner, email)</p>
-							</td>
-						</tr>
-						<tr valign="top">
-							<th scope="row">
-								<label for="source">Campaign Term</label>
-							</th>
-							<td>
-								<input type="text" name="term" id="term" value="<?php if ( ! empty( $this->terms['term'] ) ) {
-									echo $this->terms['term'];
-								} ?>" class="txt"/>
-								<p class="description">(identify the paid keywords)</p>
-							</td>
-						</tr>
-						<tr valign="top">
-							<th scope="row">
-								<label for="source">Campaign Content</label>
-							</th>
-							<td>
-								<input type="text" name="content" id="content" value="<?php if ( ! empty( $this->terms['content'] ) ) {
-									echo $this->terms['content'];
-								} ?>" class="txt"/>
-								<p class="description">(use to differentiate ads)</p>
-							</td>
-						</tr>
-						<tr valign="top">
-							<th scope="row">
-								<label for="source">Campaign Name <?php echo $this->required; ?></label>
-							</th>
-							<td>
-								<input type="text" name="name" id="name" value="<?php if ( ! empty( $this->terms['name'] ) ) {
-									echo $this->terms['name'];
-								} ?>" class="txt"/>
-								<p class="description">(product, promo code or slogan)</p>
-							</td>
-						</tr>
-						<tr valign="top">
-							<th scope="row">
-								<label>Choose your page:</label>
-							</th>
-							<td>
+					<tr valign="top">
+						<th scope="row">
+							<label for="source">Campaign Source <?php echo $this->required; ?></label>
+						</th>
+						<td>
+							<input type="text" name="source" id="source"
+							       value="<?php if ( ! empty( $this->terms['source'] ) ) {
+								       echo $this->terms['source'];
+							       } ?>" class="txt requiredField"/>
+
+							<p class="description">(referrer: google, citysearch, newsletter4)</p>
+						</td>
+					</tr>
+					<tr valign="top">
+						<th scope="row">
+							<label for="source">Campaign Medium <?php echo $this->required; ?></label>
+						</th>
+						<td>
+							<input type="text" name="medium" id="medium"
+							       value="<?php if ( ! empty( $this->terms['medium'] ) ) {
+								       echo $this->terms['medium'];
+							       } ?>" class="txt requiredField"/>
+
+							<p class="description">(marketing medium: cpc, banner, email)</p>
+						</td>
+					</tr>
+					<tr valign="top">
+						<th scope="row">
+							<label for="source">Campaign Term</label>
+						</th>
+						<td>
+							<input type="text" name="term" id="term"
+							       value="<?php if ( ! empty( $this->terms['term'] ) ) {
+								       echo $this->terms['term'];
+							       } ?>" class="txt"/>
+
+							<p class="description">(identify the paid keywords)</p>
+						</td>
+					</tr>
+					<tr valign="top">
+						<th scope="row">
+							<label for="source">Campaign Content</label>
+						</th>
+						<td>
+							<input type="text" name="content" id="content"
+							       value="<?php if ( ! empty( $this->terms['content'] ) ) {
+								       echo $this->terms['content'];
+							       } ?>" class="txt"/>
+
+							<p class="description">(use to differentiate ads)</p>
+						</td>
+					</tr>
+					<tr valign="top">
+						<th scope="row">
+							<label for="source">Campaign Name <?php echo $this->required; ?></label>
+						</th>
+						<td>
+							<input type="text" name="name" id="name"
+							       value="<?php if ( ! empty( $this->terms['name'] ) ) {
+								       echo $this->terms['name'];
+							       } ?>" class="txt"/>
+
+							<p class="description">(product, promo code or slogan)</p>
+						</td>
+					</tr>
+					<tr valign="top">
+						<th scope="row">
+							<label>Choose your page:</label>
+						</th>
+						<td>
+							<?php
+							$the_pages = get_posts( array(
+								'post_type'      => 'any',
+								'post_status'    => 'publish',
+								'orderby'        => 'title',
+								'order'          => 'ASC',
+								'posts_per_page' => - 1
+							) );
+							if ($the_pages) {
+							?>
+							<select name="select-page">
+								<option value="">= No Page =</option>
+								<option value="<?php echo $this->terms['site']; ?>/">= Home =</option>
 								<?php
-								$the_pages = get_posts( array(
-									'post_type'      => 'any',
-									'post_status'    => 'publish',
-									'orderby'        => 'title',
-									'order'          => 'ASC',
-									'posts_per_page' => - 1
-								) );
-								if ($the_pages) {
-								?>
-								<select name="select-page">
-									<option value="">= No Page =</option>
-									<option value="<?php echo $this->terms['site']; ?>/">= Home =</option>
-									<?php
-									foreach ( $the_pages as $page ) {
-										$page_id = $page->ID;
-										$slug    = get_permalink( $page_id );
-										$title   = $page->post_title;
-										?>
-										<option value="<?php echo $slug; ?>"><?php echo $title; ?></option>
-										<?php
-									}
-									echo "</select>";
+								foreach ( $the_pages as $page ) {
+									$page_id = $page->ID;
+									$slug    = get_permalink( $page_id );
+									$title   = $page->post_title;
+									?>
+									<option value="<?php echo $slug; ?>"><?php echo $title; ?></option>
+								<?php
+								}
+								echo "</select>";
 								}
 								?>
-							</td>
-						</tr>
+						</td>
+					</tr>
 					</tbody>
 				</table>
 
@@ -286,11 +299,24 @@ class GoogleURLCreator {
 				</ul>
 			</div>
 			<p>
-				For more information visit <a href="https://support.google.com/analytics/answer/1033867?hl=en">Google's URL builder page</a>.
+				For more information visit <a href="https://support.google.com/analytics/answer/1033867?hl=en">Google's
+					URL builder page</a>.
 			</p>
 		</div>
 	<?php
 	}
+
+	/**
+	 * Append button to button group below title
+	 *
+	 * Since 1.2
+	 */
+	public function button() {
+
+		$button = "<a href='#' class='button button-small'>Campaign URL</a>";
+
+		echo '<script type="text/javascript">document.getElementById("edit-slug-box").innerHTML += "' . $button . '";</script>';
+	}
 }
 
-new GoogleURLCreator();
+$googleurlcreator = new GoogleURLCreator();
