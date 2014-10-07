@@ -313,9 +313,14 @@ class GoogleURLCreator {
 	 */
 	public function button() {
 
-		$button = "<a href='#' class='button button-small'>Campaign URL</a>";
+		$button = "<a href='#' class='button button-small' onclick='campaignPopup()'>Campaign URL</a>";
 
-		echo '<script type="text/javascript">document.getElementById("edit-slug-box").innerHTML += "' . $button . '";</script>';
+		$output = '<script type="text/javascript">';
+		$output .= 'function campaignPopup() {';
+		$output .= 'var url = prompt("Campaign", "My Campaign");';
+		$output .= '}';
+		$output .= 'document.getElementById("edit-slug-box").innerHTML += "' . $button . '";</script>';
+		echo $output;
 	}
 }
 
