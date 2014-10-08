@@ -1,6 +1,7 @@
 === Google URL Creator ===
 
 Contributors: BrashRebel
+Donate link: http://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=admin%40realbigmarketing%2ecom
 Tags: Google Adwords, Google, SEM, PPC, Keywords, SEO
 Requires at least: 2.0.0
 Tested up to: 3.7.1
